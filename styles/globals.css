@@ -1,26 +1,87 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cantata+One&family=Funnel+Display:wght@300..800&family=Homemade+Apple&display=swap');
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+
+/* ======================
+   FONTS
+====================== */
+
+--font-body: "Funnel Display", sans-serif;
+--font-heading: "Cantata One", serif;
+--font-subheading: "Homemade Apple", cursive;
+
+
+/* ======================
+   TYPOGRAPHY
+====================== */
+
+--text-h1: 2.25rem;
+--text-h2: 1.75rem;
+--text-h3: 1.35rem;
+--text-h4: 1.1rem;
+--text-body: 1rem;
+--text-small: 0.85rem;
+
+--leading-h1: 2.8rem;
+--leading-h2: 2.3rem;
+--leading-h3: 1.9rem;
+--leading-h4: 1.6rem;
+--leading-body: 1.6rem;
+
+--tracking-tight: -0.02em;
+--tracking-heading: -0.01em;
+
+
+/* ======================
+   COLOR SYSTEM
+====================== */
+
+/* Background layers */
+
+--color-bg: #e3dc95;
+--color-surface: #f0ebdd;
+--color-surface-muted: #e8e2cd;
+
+/* Main UI */
+
+--color-primary: #c5c27e;
+--color-accent: #a6a867;
+
+/* Text */
+
+--color-text: #1b2021;
+--color-text-muted: #51513d;
+
+
+/* ======================
+   STATUS COLORS
+====================== */
+
+--color-success: oklch(52.7% 0.154 150.069);
+--color-warning: oklch(55.4% 0.135 66.442);
+--color-error: oklch(50.5% 0.213 27.518);
+--color-info: oklch(50% 0.134 242.749);
+
+/* Toast background */
+
+--toast-success-bg: oklch(92.5% 0.084 155.995);
+--toast-warning-bg: oklch(94.5% 0.129 101.54);
+--toast-error-bg: oklch(88.5% 0.062 18.334);
+--toast-info-bg: oklch(90.1% 0.058 230.902);
+
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+[data-theme="dark"] {
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+--color-bg: #1b2021;
+--color-surface: #292d28;
+--color-surface-muted: #3d3F33;
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+--color-primary: #c5c27e;
+--color-accent: #a6a867;
+
+--color-text: #f0ebdd;
+--color-text-muted: #e8e2cd;
+
 }
