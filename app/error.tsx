@@ -1,4 +1,6 @@
-export default function NotFoundPage() {
+"use client";
+
+export default function error() {
   return (
     <main>
       <h1>Login</h1>
