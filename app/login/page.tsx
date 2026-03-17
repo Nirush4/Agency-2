@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '../../service/api/subabaseClient';
+import Image from 'next/image';
 
 export default function LoginPage() {
   const supabase = createClient();
@@ -59,31 +60,36 @@ export default function LoginPage() {
   };
 
   return (
-    <div className='relative flex items-center justify-center min-h-screen bg-gradient-to-b from-yellow-50 via-orange-50 to-rose-50 px-4'>
+    <div
+      className='relative flex items-center justify-center min-h-screen px-4 sm:px-6'
+      style={{ backgroundColor: 'var(--color-bg)' }}
+    >
       <div className='absolute inset-0 overflow-hidden'>
-        <img
-          src='/images/food-background.jpg'
+        <Image
+          src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
           alt='Food background'
-          className='w-full h-full object-cover opacity-20 blur-sm'
+          className='w-full h-full object-cover opacity-80 blur-xs'
+          fill
+          priority
         />
       </div>
 
       <form
         onSubmit={handleLogin}
-        className='relative z-10 w-full max-w-md p-10 bg-white rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-200 transition-opacity duration-300'
+        className='relative z-10 w-full max-w-md sm:max-w-lg md:max-w-xl p-8 sm:p-10 bg-white rounded-3xl shadow-2xl border border-gray-200 transition-opacity duration-300'
         style={{ opacity: showLoader ? 0.4 : 1 }}
       >
         <div className='mb-8 text-center'>
-          <h1 className='text-3xl font-extrabold text-[#F15A20] tracking-wide'>
+          <h1 className='text-h3 sm:text-h1 font-heading font-extrabold text-text'>
             Welcome Back
           </h1>
-          <p className='mt-2 text-sm text-gray-500'>
+          <p className='mt-2 text-sm sm:text-base'>
             Sign in to access your delicious recipes
           </p>
         </div>
 
         <div className='mb-5'>
-          <label className='block mb-2 text-sm font-medium text-gray-700'>
+          <label className='block mb-2 text-body font-body font-medium '>
             Email address
           </label>
           <input
@@ -92,12 +98,12 @@ export default function LoginPage() {
             onChange={(e) => setEmail(e.target.value)}
             required
             placeholder='you@example.com'
-            className='w-full px-4 py-3 text-sm border rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 shadow-sm transition'
+            className='w-full px-4 py-3  border rounded-xl  text-body font-body focus:outline-none shadow-sm transition'
           />
         </div>
 
         <div className='mb-6'>
-          <label className='block mb-2 text-sm font-medium text-gray-700'>
+          <label className='block mb-2  text-body font-body font-medium'>
             Password
           </label>
           <input
@@ -106,23 +112,28 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
             placeholder='••••••••'
-            className='w-full px-4 py-3 text-sm border rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 shadow-sm transition'
+            className='w-full px-4 py-3  text-body font-body border rounded-xl focus:outline-none shadow-sm transition'
           />
         </div>
 
         <button
           type='submit'
           disabled={loading}
-          className='flex items-center justify-center w-full py-3 text-white text-sm font-semibold bg-[#F15A20] rounded-xl hover:bg-amber-600 shadow-lg transition'
+          className='flex items-center cursor-pointer justify-center w-full py-3 sm:py-4 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg transition transform hover:scale-105'
+          style={{ backgroundColor: 'var(--color-secondary)' }}
         >
           {loading ? 'Logging in…' : 'Log in'}
         </button>
 
-        <p className='mt-6 text-center text-gray-600 text-sm'>
+        <p
+          className='mt-6 text-center  text-body font-body'
+          style={{ color: 'var(--color-text)' }}
+        >
           Don’t have an account?{' '}
           <Link
             href='/register'
-            className='font-semibold text-[#F15A20] hover:text-amber-600'
+            className='font-semibold'
+            style={{ color: 'var(--color-secondary)' }}
           >
             Create one
           </Link>
