@@ -1,7 +1,24 @@
-export default function Home() {
+import { createClient } from "@/service/api/supabaseServer";
+
+interface Todo {
+  id: number;
+  title: string;
+  completed: boolean;
+}
+
+export default async function Home() {
+  const supabase = await createClient();
+
+  const { data: recipes } = await supabase.from("recipes").select();
+
   return (
-    <div className='flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black'>
-      <h1 className='text-6xl'>Hi World</h1>
-    </div>
+    <article className="p-4 max-w-2xl mx-auto">
+      <h1 className="font-bold text-2xl text-center">Recipes</h1>
+      <ul>
+        {recipes?.map((recipe: Todo) => (
+          <li key={recipe.id}>{recipe.title}</li>
+        ))}
+      </ul>
+    </article>
   );
 }
