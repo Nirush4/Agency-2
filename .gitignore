@@ -1,7 +1,9 @@
 node_modules
 .next/
 dist
-*.env
+.env
+.env.local
+.env.development
 
 # Playwright
 /test-results/
