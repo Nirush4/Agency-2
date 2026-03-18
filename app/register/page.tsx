@@ -126,6 +126,7 @@ export default function RegisterPage(): JSX.Element {
             id='name'
             {...register('name')}
             autoComplete='name'
+            placeholder='John Doe'
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? 'name-error' : undefined}
             className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]'
@@ -148,6 +149,7 @@ export default function RegisterPage(): JSX.Element {
             id='avatar'
             {...register('avatar_url')}
             autoComplete='url'
+            placeholder='https://example.com/avatar.jpg'
             className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]'
           />
           {errors.avatar_url && (
@@ -166,6 +168,7 @@ export default function RegisterPage(): JSX.Element {
             id='email'
             {...register('email')}
             autoComplete='email'
+            placeholder='johndoe@example.com'
             aria-invalid={!!errors.email}
             aria-describedby={errors.email ? 'email-error' : undefined}
             className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]'
