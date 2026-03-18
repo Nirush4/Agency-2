@@ -66,9 +66,10 @@ export default function LoginPage() {
     >
       <div className='absolute inset-0 overflow-hidden'>
         <Image
-          src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-          alt='Food background'
-          className='w-full h-full object-cover opacity-80 blur-xs'
+          src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0'
+          alt=''
+          aria-hidden='true'
+          className='w-full h-full object-cover opacity-80 scale-125 blur-xs'
           fill
           priority
         />
@@ -89,7 +90,7 @@ export default function LoginPage() {
         </div>
 
         <div className='mb-5'>
-          <label className='block mb-2 text-body font-body font-medium '>
+          <label className='block mb-2 text-body font-body font-medium'>
             Email address
           </label>
           <input
@@ -97,13 +98,14 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            autoComplete='email'
+            className='w-full px-4 py-3 border rounded-xl text-body font-body focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] shadow-sm transition'
             placeholder='you@example.com'
-            className='w-full px-4 py-3  border rounded-xl  text-body font-body focus:outline-none shadow-sm transition'
           />
         </div>
 
         <div className='mb-6'>
-          <label className='block mb-2  text-body font-body font-medium'>
+          <label className='block mb-2 text-body font-body font-medium'>
             Password
           </label>
           <input
@@ -111,28 +113,30 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            autoComplete='current-password'
+            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] shadow-sm transition'
             placeholder='••••••••'
-            className='w-full px-4 py-3  text-body font-body border rounded-xl focus:outline-none shadow-sm transition'
           />
         </div>
 
         <button
           type='submit'
           disabled={loading}
-          className='flex items-center cursor-pointer justify-center w-full py-3 sm:py-4 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg transition transform hover:scale-105'
+          aria-busy={loading}
+          className='flex items-center cursor-pointer justify-center w-full py-3 sm:py-4 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-secondary)]'
           style={{ backgroundColor: 'var(--color-secondary)' }}
         >
           {loading ? 'Logging in…' : 'Log in'}
         </button>
 
         <p
-          className='mt-6 text-center  text-body font-body'
+          className='mt-6 text-center text-body font-body'
           style={{ color: 'var(--color-text)' }}
         >
           Don’t have an account?{' '}
           <Link
             href='/register'
-            className='font-semibold'
+            className='font-semibold focus:outline-none focus:underline'
             style={{ color: 'var(--color-secondary)' }}
           >
             Create one
