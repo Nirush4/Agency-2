@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import schema from '@/types/register';
@@ -11,6 +10,7 @@ import z from 'zod';
 import { createClient } from '@/service/api/subabaseClient';
 import { useState, useRef, useEffect, JSX } from 'react';
 import { toast } from 'sonner';
+import { Eye, EyeOff } from 'lucide-react';
 
 type FormData = z.infer<typeof schema>;
 
@@ -19,6 +19,7 @@ const DEFAULT_AVATAR =
 
 export default function RegisterPage(): JSX.Element {
   const [formError, setFormError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const errorRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
   const router = useRouter();
@@ -78,9 +79,7 @@ export default function RegisterPage(): JSX.Element {
         id: loadingToast,
       });
 
-      setTimeout(() => {
-        router.push('/login');
-      }, 1000);
+      setTimeout(() => router.push('/login'), 1000);
     } catch (err) {
       toast.error((err as Error).message || 'Something went wrong', {
         id: loadingToast,
@@ -129,7 +128,7 @@ export default function RegisterPage(): JSX.Element {
             autoComplete='name'
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? 'name-error' : undefined}
-            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-(--color-secondary)'
+            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]'
           />
           {errors.name && (
             <p id='name-error' className='mt-1 text-sm text-red-500'>
@@ -149,7 +148,7 @@ export default function RegisterPage(): JSX.Element {
             id='avatar'
             {...register('avatar_url')}
             autoComplete='url'
-            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-(--color-secondary)'
+            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]'
           />
           {errors.avatar_url && (
             <p className='text-sm text-red-500'>{errors.avatar_url.message}</p>
@@ -169,7 +168,7 @@ export default function RegisterPage(): JSX.Element {
             autoComplete='email'
             aria-invalid={!!errors.email}
             aria-describedby={errors.email ? 'email-error' : undefined}
-            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-(--color-secondary)'
+            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]'
           />
           {errors.email && (
             <p id='email-error' className='text-sm text-red-500'>
@@ -178,24 +177,39 @@ export default function RegisterPage(): JSX.Element {
           )}
         </div>
 
-        <div className='mb-6'>
+        <div className='mb-6 relative'>
           <label
             htmlFor='password'
             className='block mb-2 text-body font-body font-medium'
           >
             Password
           </label>
-          <input
-            id='password'
-            type='password'
-            {...register('password')}
-            autoComplete='new-password'
-            aria-invalid={!!errors.password}
-            aria-describedby={errors.password ? 'password-error' : undefined}
-            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-(--color-secondary)'
-          />
+          <div className='relative'>
+            <input
+              id='password'
+              type={showPassword ? 'text' : 'password'}
+              {...register('password')}
+              autoComplete='new-password'
+              aria-invalid={!!errors.password}
+              aria-describedby={errors.password ? 'password-error' : undefined}
+              placeholder='••••••••'
+              className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] pr-12'
+            />
+            <button
+              type='button'
+              onClick={() => setShowPassword(!showPassword)}
+              className='absolute inset-y-0 right-3 flex items-center justify-center text-gray-500 hover:text-gray-700 focus:outline-none'
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? (
+                <EyeOff className='h-5 w-5 cursor-pointer' />
+              ) : (
+                <Eye className='h-5 w-5 cursor-pointer' />
+              )}
+            </button>
+          </div>
           {errors.password && (
-            <p id='password-error' className='text-sm text-red-500'>
+            <p id='password-error' className='text-sm text-red-500 mt-1'>
               {errors.password.message}
             </p>
           )}
@@ -222,7 +236,7 @@ export default function RegisterPage(): JSX.Element {
           type='submit'
           disabled={isSubmitting}
           aria-busy={isSubmitting}
-          className='w-full py-3 sm:py-4 cursor-pointer text-white font-semibold rounded-xl shadow-lg transition transform hover:scale-105 focus:ring-2 focus:ring-(--color-secondary)'
+          className='w-full py-3 sm:py-4 cursor-pointer text-white font-semibold rounded-xl shadow-lg transition transform hover:scale-105 focus:ring-2 focus:ring-[var(--color-secondary)]'
           style={{ backgroundColor: 'var(--color-secondary)' }}
         >
           {isSubmitting ? 'Creating account…' : 'Sign up'}

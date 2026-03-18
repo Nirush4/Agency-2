@@ -1,16 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '../../service/api/subabaseClient';
 import Image from 'next/image';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Eye, EyeOff } from 'lucide-react';
 
-export default function LoginPage() {
+export default function LoginPage(): JSX.Element {
   const supabase = createClient();
   const router = useRouter();
 
@@ -93,7 +91,8 @@ export default function LoginPage() {
 
       <form
         onSubmit={handleLogin}
-        className='relative z-10 w-full max-w-md sm:max-w-lg md:max-w-xl p-8 sm:p-10 bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-gray-200 transition-opacity duration-300'
+        className='relative z-10 w-full max-w-md sm:max-w-lg md:max-w-xl p-8 sm:p-10 bg-white rounded-3xl shadow-2xl border border-gray-200 transition-opacity duration-300'
+        style={{ opacity: loading ? 0.6 : 1 }}
       >
         <div className='mb-8 text-center'>
           <h1 className='text-h3 sm:text-h1 font-heading font-extrabold text-text'>
@@ -111,7 +110,7 @@ export default function LoginPage() {
           >
             Email address
           </label>
-          <Input
+          <input
             type='email'
             id='email'
             value={email}
@@ -119,6 +118,7 @@ export default function LoginPage() {
             required
             placeholder='you@example.com'
             autoComplete='email'
+            className='w-full px-4 py-3 border rounded-xl text-body font-body focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] shadow-sm transition'
           />
         </div>
 
@@ -129,40 +129,41 @@ export default function LoginPage() {
           >
             Password
           </label>
-          <Input
-            type={showPassword ? 'text' : 'password'}
-            id='password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder='••••••••'
-            autoComplete='current-password'
-            className='pr-12'
-          />
-          <Button
-            type='button'
-            variant='ghost'
-            size='icon'
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
-            className='absolute top-1/2 right-3 -translate-y-1/2 p-1'
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? (
-              <EyeOff className='h-4 w-4' />
-            ) : (
-              <Eye className='h-4 w-4' />
-            )}
-          </Button>
+          <div className='relative'>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id='password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder='••••••••'
+              autoComplete='current-password'
+              className='w-full px-4 py-3 border rounded-xl text-body font-body focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] pr-12 shadow-sm transition'
+            />
+            <button
+              type='button'
+              onClick={() => setShowPassword(!showPassword)}
+              className='absolute inset-y-0 right-3 flex items-center justify-center text-gray-500 hover:text-gray-700 focus:outline-none'
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? (
+                <EyeOff className='h-5 w-5 cursor-pointer' />
+              ) : (
+                <Eye className='h-5 w-5 cursor-pointer' />
+              )}
+            </button>
+          </div>
         </div>
 
-        <Button
+        <button
           type='submit'
           disabled={loading}
-          className='w-full py-3 sm:py-4 mt-2'
-          style={{ backgroundColor: 'var(--color-secondary)', color: 'white' }}
+          aria-busy={loading}
+          className='flex items-center justify-center w-full py-3 sm:py-4 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]'
+          style={{ backgroundColor: 'var(--color-secondary)' }}
         >
           {loading ? 'Logging in…' : 'Log in'}
-        </Button>
+        </button>
 
         <p className='mt-6 text-center text-body font-body'>
           Don’t have an account?{' '}
