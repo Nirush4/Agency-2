@@ -6,6 +6,9 @@ import Link from 'next/link';
 import { createClient } from '../../service/api/subabaseClient';
 import Image from 'next/image';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
   const supabase = createClient();
@@ -14,6 +17,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,50 +111,58 @@ export default function LoginPage() {
           >
             Email address
           </label>
-          <input
+          <Input
             type='email'
             id='email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            autoComplete='email'
-            aria-label='Email address'
-            aria-required='true'
-            className='w-full px-4 py-3 border rounded-xl text-body font-body focus:outline-none focus:ring-2 focus:ring-(--color-secondary) shadow-sm transition'
             placeholder='you@example.com'
+            autoComplete='email'
           />
         </div>
 
-        <div className='mb-6'>
+        <div className='mb-6 relative'>
           <label
             htmlFor='password'
             className='block mb-2 text-body font-body font-medium'
           >
             Password
           </label>
-          <input
-            type='password'
+          <Input
+            type={showPassword ? 'text' : 'password'}
             id='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            autoComplete='current-password'
-            aria-label='Password'
-            aria-required='true'
-            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-(--color-secondary) shadow-sm transition'
             placeholder='••••••••'
+            autoComplete='current-password'
+            className='pr-12'
           />
+          <Button
+            type='button'
+            variant='ghost'
+            size='icon'
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            className='absolute top-1/2 right-3 -translate-y-1/2 p-1'
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? (
+              <EyeOff className='h-4 w-4' />
+            ) : (
+              <Eye className='h-4 w-4' />
+            )}
+          </Button>
         </div>
 
-        <button
+        <Button
           type='submit'
           disabled={loading}
-          aria-busy={loading}
-          className='flex items-center cursor-pointer justify-center w-full py-3 sm:py-4 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-(--color-secondary)'
-          style={{ backgroundColor: 'var(--color-secondary)' }}
+          className='w-full py-3 sm:py-4 mt-2'
+          style={{ backgroundColor: 'var(--color-secondary)', color: 'white' }}
         >
           {loading ? 'Logging in…' : 'Log in'}
-        </button>
+        </Button>
 
         <p className='mt-6 text-center text-body font-body'>
           Don’t have an account?{' '}
