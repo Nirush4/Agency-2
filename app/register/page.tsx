@@ -9,14 +9,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import schema from '@/types/register';
 import z from 'zod';
 import { createClient } from '@/service/api/subabaseClient';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, JSX } from 'react';
+import { toast } from 'sonner';
 
 type FormData = z.infer<typeof schema>;
 
 const DEFAULT_AVATAR =
   'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
 
-export default function RegisterPage() {
+export default function RegisterPage(): JSX.Element {
   const [formError, setFormError] = useState<string | null>(null);
   const errorRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
@@ -39,6 +40,14 @@ export default function RegisterPage() {
   const onSubmit = async (data: FormData) => {
     setFormError(null);
 
+    const loadingToast = toast.loading('Creating account...', {
+      style: {
+        background: '#EEF5DB',
+        color: '#053225',
+        border: '1px solid #F15A20',
+      },
+    });
+
     try {
       const { data: authData, error } = await supabase.auth.signUp({
         email: data.email,
@@ -46,7 +55,7 @@ export default function RegisterPage() {
       });
 
       if (error) {
-        setFormError(error.message);
+        toast.error(error.message, { id: loadingToast });
         return;
       }
 
@@ -61,13 +70,21 @@ export default function RegisterPage() {
       });
 
       if (profileError) {
-        setFormError(profileError.message);
+        toast.error(profileError.message, { id: loadingToast });
         return;
       }
 
-      router.push('/login');
+      toast.success('Account created! Please check your email.', {
+        id: loadingToast,
+      });
+
+      setTimeout(() => {
+        router.push('/login');
+      }, 1000);
     } catch (err) {
-      setFormError((err as Error).message || 'Something went wrong');
+      toast.error((err as Error).message || 'Something went wrong', {
+        id: loadingToast,
+      });
     }
   };
 
@@ -112,7 +129,7 @@ export default function RegisterPage() {
             autoComplete='name'
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? 'name-error' : undefined}
-            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]'
+            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-(--color-secondary)'
           />
           {errors.name && (
             <p id='name-error' className='mt-1 text-sm text-red-500'>
@@ -132,7 +149,7 @@ export default function RegisterPage() {
             id='avatar'
             {...register('avatar_url')}
             autoComplete='url'
-            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]'
+            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-(--color-secondary)'
           />
           {errors.avatar_url && (
             <p className='text-sm text-red-500'>{errors.avatar_url.message}</p>
@@ -152,7 +169,7 @@ export default function RegisterPage() {
             autoComplete='email'
             aria-invalid={!!errors.email}
             aria-describedby={errors.email ? 'email-error' : undefined}
-            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]'
+            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-(--color-secondary)'
           />
           {errors.email && (
             <p id='email-error' className='text-sm text-red-500'>
@@ -175,7 +192,7 @@ export default function RegisterPage() {
             autoComplete='new-password'
             aria-invalid={!!errors.password}
             aria-describedby={errors.password ? 'password-error' : undefined}
-            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]'
+            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-(--color-secondary)'
           />
           {errors.password && (
             <p id='password-error' className='text-sm text-red-500'>
@@ -205,7 +222,7 @@ export default function RegisterPage() {
           type='submit'
           disabled={isSubmitting}
           aria-busy={isSubmitting}
-          className='w-full py-3 sm:py-4 text-white font-semibold rounded-xl shadow-lg transition transform hover:scale-105 focus:ring-2 focus:ring-[var(--color-secondary)]'
+          className='w-full py-3 sm:py-4 cursor-pointer text-white font-semibold rounded-xl shadow-lg transition transform hover:scale-105 focus:ring-2 focus:ring-(--color-secondary)'
           style={{ backgroundColor: 'var(--color-secondary)' }}
         >
           {isSubmitting ? 'Creating account…' : 'Sign up'}
