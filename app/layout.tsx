@@ -1,6 +1,6 @@
+import { Toaster } from 'sonner';
 import './globals.css';
 import type { Metadata } from 'next';
-import '../styles/globals.css';
 
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -26,6 +26,10 @@ export default function RootLayout({
 						<Footer />
 					</div>
 				</div>
+				<Toaster
+					richColors
+					position='top-center'
+				/>
 			</body>
 		</html>
 	);

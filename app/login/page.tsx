@@ -1,23 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '../../service/api/subabaseClient';
 import Image from 'next/image';
+import { toast } from 'sonner';
+import { Eye, EyeOff } from 'lucide-react';
 
-export default function LoginPage() {
+export default function LoginPage(): JSX.Element {
   const supabase = createClient();
   const router = useRouter();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showLoader, setShowLoader] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    const toastId = toast.loading('Logging in...', {
+      style: { backgroundColor: 'var(--color-secondary)', color: 'white' },
+    });
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -26,12 +32,13 @@ export default function LoginPage() {
       });
 
       if (error) {
-        console.error(error.message);
+        toast.dismiss(toastId);
+        toast.error(error.message, {
+          style: { backgroundColor: '#FEE2E2', color: '#991B1B' },
+        });
         setLoading(false);
         return;
       }
-
-      setShowLoader(true);
 
       if (data.user?.id) {
         const { data: profile } = await supabase
@@ -50,10 +57,17 @@ export default function LoginPage() {
         }
       }
 
-      setShowLoader(false);
+      toast.dismiss(toastId);
+      toast.success('Logged in successfully!', {
+        style: { backgroundColor: 'var(--color-secondary)', color: 'white' },
+      });
+
       router.push('/');
     } catch (err) {
-      console.error('Login error:', err);
+      toast.dismiss(toastId);
+      toast.error((err as Error).message || 'Something went wrong', {
+        style: { backgroundColor: '#FEE2E2', color: '#991B1B' },
+      });
     } finally {
       setLoading(false);
     }
@@ -66,10 +80,11 @@ export default function LoginPage() {
     >
       <div className='absolute inset-0 overflow-hidden'>
         <Image
-          src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-          alt='Food background'
-          className='w-full h-full object-cover opacity-80 blur-xs'
+          src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop'
+          alt=''
+          aria-hidden='true'
           fill
+          className='w-full h-full object-cover opacity-80 scale-125 blur-xs'
           priority
         />
       </div>
@@ -77,7 +92,7 @@ export default function LoginPage() {
       <form
         onSubmit={handleLogin}
         className='relative z-10 w-full max-w-md sm:max-w-lg md:max-w-xl p-8 sm:p-10 bg-white rounded-3xl shadow-2xl border border-gray-200 transition-opacity duration-300'
-        style={{ opacity: showLoader ? 0.4 : 1 }}
+        style={{ opacity: loading ? 0.6 : 1 }}
       >
         <div className='mb-8 text-center'>
           <h1 className='text-h3 sm:text-h1 font-heading font-extrabold text-text'>
@@ -89,50 +104,72 @@ export default function LoginPage() {
         </div>
 
         <div className='mb-5'>
-          <label className='block mb-2 text-body font-body font-medium '>
+          <label
+            htmlFor='email'
+            className='block mb-2 text-body font-body font-medium'
+          >
             Email address
           </label>
           <input
             type='email'
+            id='email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             placeholder='you@example.com'
-            className='w-full px-4 py-3  border rounded-xl  text-body font-body focus:outline-none shadow-sm transition'
+            autoComplete='email'
+            className='w-full px-4 py-3 border rounded-xl text-body font-body focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] shadow-sm transition'
           />
         </div>
 
-        <div className='mb-6'>
-          <label className='block mb-2  text-body font-body font-medium'>
+        <div className='mb-6 relative'>
+          <label
+            htmlFor='password'
+            className='block mb-2 text-body font-body font-medium'
+          >
             Password
           </label>
-          <input
-            type='password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder='••••••••'
-            className='w-full px-4 py-3  text-body font-body border rounded-xl focus:outline-none shadow-sm transition'
-          />
+          <div className='relative'>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id='password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder='••••••••'
+              autoComplete='current-password'
+              className='w-full px-4 py-3 border rounded-xl text-body font-body focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] pr-12 shadow-sm transition'
+            />
+            <button
+              type='button'
+              onClick={() => setShowPassword(!showPassword)}
+              className='absolute inset-y-0 right-3 flex items-center justify-center text-gray-500 hover:text-gray-700 focus:outline-none'
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? (
+                <EyeOff className='h-5 w-5 cursor-pointer' />
+              ) : (
+                <Eye className='h-5 w-5 cursor-pointer' />
+              )}
+            </button>
+          </div>
         </div>
 
         <button
           type='submit'
           disabled={loading}
-          className='flex items-center cursor-pointer justify-center w-full py-3 sm:py-4 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg transition transform hover:scale-105'
+          aria-busy={loading}
+          className='flex items-center justify-center w-full py-3 sm:py-4 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]'
           style={{ backgroundColor: 'var(--color-secondary)' }}
         >
           {loading ? 'Logging in…' : 'Log in'}
         </button>
 
-        <p
-          className='mt-6 text-center  text-body font-body'
-          style={{ color: 'var(--color-text)' }}
-        >
+        <p className='mt-6 text-center text-body font-body'>
           Don’t have an account?{' '}
           <Link
             href='/register'
-            className='font-semibold'
+            className='font-semibold focus:outline-none focus:underline'
             style={{ color: 'var(--color-secondary)' }}
           >
             Create one
