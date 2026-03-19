@@ -1,4 +1,4 @@
-import { SlidersHorizontal, ArrowUpDown } from 'lucide-react';
+// import { SlidersHorizontal, ArrowUpDown } from 'lucide-react';
 import Pagination from '@/components/home/Pagination';
 
 const recipes = Array.from({ length: 10 }, (_, i) => ({
@@ -12,7 +12,7 @@ export default function TopChoicesSection() {
 			<div className='mb-4 flex items-center justify-between'>
 				<h2 className='text-sm italic text-[#f5f1e8]'>Top Choices for You</h2>
 
-				<div className='hidden gap-2 text-xs sm:flex'>
+				{/* <div className='hidden gap-2 text-xs sm:flex'>
 					<button
 						type='button'
 						className='flex items-center gap-2 rounded bg-[#697542] px-2 py-1 text-[#f5f1e8] transition hover:bg-[#7a8550]'>
@@ -26,7 +26,7 @@ export default function TopChoicesSection() {
 						<ArrowUpDown size={12} />
 						<span>Sort</span>
 					</button>
-				</div>
+				</div> */}
 			</div>
 
 			<div className='grid grid-cols-2 gap-4 md:grid-cols-4'>
