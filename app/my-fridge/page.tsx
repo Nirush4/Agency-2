@@ -1,68 +1,127 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Plus, X } from 'lucide-react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const QUICK_INGREDIENTS = [
-  'Tomatoes',
-  'Onions',
-  'Garlic',
-  'Chicken',
-  'Pasta',
-  'Rice',
-  'Eggs',
-  'Milk',
-  'Cheese',
-  'Bread',
-  'Potatoes',
-  'Carrots',
-  'Olive Oil',
-  'Salt',
-  'Pepper',
-];
+const INGREDIENT_GROUPS = {
+  Vegetables: ['Tomatoes', 'Onions', 'Garlic', 'Carrots', 'Potatoes'],
+  Proteins: ['Chicken', 'Eggs', 'Cheese'],
+  Pantry: ['Rice', 'Pasta', 'Bread', 'Olive Oil', 'Salt', 'Pepper'],
+  Dairy: ['Milk'],
+};
+
+const ALL_INGREDIENTS = Object.values(INGREDIENT_GROUPS).flat();
+
+const container = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.06,
+    },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0 },
+};
 
 export default function MyFridge() {
   const [selected, setSelected] = useState<string[]>([]);
   const [input, setInput] = useState('');
+  const [focused, setFocused] = useState(false);
+
+  const filtered = useMemo(() => {
+    return ALL_INGREDIENTS.filter((i) =>
+      i.toLowerCase().includes(input.toLowerCase())
+    ).slice(0, 6);
+  }, [input]);
 
   const addIngredient = (item: string) => {
-    const formatted = item.trim();
+    const formatted =
+      item.trim().charAt(0).toUpperCase() + item.trim().slice(1);
     if (!formatted) return;
     if (!selected.includes(formatted)) {
-      setSelected([...selected, formatted]);
+      setSelected((prev) => [...prev, formatted]);
     }
   };
 
   const removeIngredient = (item: string) => {
-    setSelected(selected.filter((i) => i !== item));
+    setSelected((prev) => prev.filter((i) => i !== item));
   };
 
+  // 💾 Optional: persist to Supabase
+  /*
+  useEffect(() => {
+    const save = async () => {
+      await supabase.from('fridge').upsert({
+        user_id: 'USER_ID',
+        items: selected,
+      });
+    };
+    save();
+  }, [selected]);
+  */
+
   return (
-    <div className='min-h-screen bg-[#0a0d0c] text-[#f5f5f3] flex'>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className='min-h-screen bg-[#0a0d0c] text-[#f5f5f3] flex'
+    >
       <div className='hidden lg:flex w-1/2 relative overflow-hidden'>
-        <Image
-          src='https://images.unsplash.com/photo-1721613877687-c9099b698faa?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-          alt='ingredients'
-          fill
-          className='object-cover opacity-100'
-        />
+        <motion.div
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1.2 }}
+          className='absolute inset-0'
+        >
+          <Image
+            src='/fridge.png'
+            alt='ingredients'
+            fill
+            className='object-cover'
+          />
+        </motion.div>
+
+        <div className='absolute inset-0 bg-gradient-to-r from-[#0a0d0c] via-transparent' />
       </div>
 
       <div className='flex-1 flex justify-center px-6 py-16'>
-        <div className='w-full max-w-md'>
-          <div className='mb-10'>
+        <motion.div
+          variants={container}
+          initial='hidden'
+          animate='show'
+          className='w-full max-w-md'
+        >
+          <motion.div variants={item} className='mb-10'>
             <h1 className='text-4xl font-semibold tracking-tight'>
               Your fridge
             </h1>
-            <p className='text-sm text-[#8f968c] mt-2'>
-              Build meals from what you already have.
-            </p>
-          </div>
 
-          <div className='relative'>
-            <input
-              className='w-full rounded-2xl bg-[#141816] border border-[#262e2a] px-5 py-4 text-sm outline-none focus:border-white/30 transition'
+            <p className='text-sm text-[#8f968c] mt-2'>
+              {selected.length === 0
+                ? "Start by adding what's in your fridge"
+                : selected.length < 3
+                ? 'Add a few more for better recipes'
+                : "You're ready to cook 🍳"}
+            </p>
+          </motion.div>
+
+          <motion.div variants={item} className='relative'>
+            <motion.input
+              animate={{
+                scale: focused ? 1.02 : 1,
+                boxShadow: focused
+                  ? '0 0 0 1px rgba(255,255,255,0.2)'
+                  : '0 0 0 0px rgba(0,0,0,0)',
+              }}
+              transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              className='w-full rounded-2xl bg-[#141816] border border-[#262e2a] px-5 py-4 text-sm outline-none transition'
               placeholder='Add ingredient...'
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -73,57 +132,99 @@ export default function MyFridge() {
                 }
               }}
             />
-          </div>
 
-          {selected.length > 0 && (
-            <div className='mt-6 flex flex-wrap gap-2'>
+            <AnimatePresence>
+              {input && filtered.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                  className='absolute mt-2 w-full bg-[#141816] border border-[#262e2a] rounded-xl shadow-xl overflow-hidden z-10'
+                >
+                  {filtered.map((item) => (
+                    <motion.button
+                      whileHover={{ x: 4 }}
+                      key={item}
+                      onClick={() => {
+                        addIngredient(item);
+                        setInput('');
+                      }}
+                      className='w-full text-left px-4 py-2 text-sm hover:bg-[#1b221f]'
+                    >
+                      {item}
+                    </motion.button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          <motion.div layout className='mt-6 flex flex-wrap gap-2'>
+            <AnimatePresence>
               {selected.map((item) => (
-                <div
+                <motion.div
+                  layout
                   key={item}
-                  className='flex items-center gap-2 rounded-full bg-[#181f1c] border border-[#2c3531] px-3 py-1.5 text-sm hover:bg-[#202824] transition'
+                  initial={{ opacity: 0, scale: 0.6 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.6 }}
+                  whileHover={{ scale: 1.08 }}
+                  className='flex items-center gap-2 rounded-full bg-white/10 border border-white/20 px-3 py-1.5 text-sm backdrop-blur'
                 >
                   {item}
                   <button onClick={() => removeIngredient(item)}>
-                    <X size={14} className='text-[#6f776d] hover:text-white' />
+                    <X size={14} className='hover:text-white' />
                   </button>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+
+          <div className='mt-10 space-y-6'>
+            {Object.entries(INGREDIENT_GROUPS).map(([group, items]) => (
+              <motion.div key={group} variants={item}>
+                <p className='text-xs uppercase tracking-wider text-[#6f776d] mb-3'>
+                  {group}
+                </p>
+
+                <div className='flex flex-wrap gap-2'>
+                  {items.map((item) => (
+                    <motion.button
+                      whileHover={{ scale: 1.06 }}
+                      whileTap={{ scale: 0.95 }}
+                      key={item}
+                      onClick={() => addIngredient(item)}
+                      className='flex items-center gap-2 rounded-full bg-[#141816] border border-[#262e2a] px-3 py-1.5 text-sm'
+                    >
+                      <Plus size={12} />
+                      {item}
+                    </motion.button>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
-
-          <div className='mt-10'>
-            <div className='flex items-center justify-between mb-3'>
-              <p className='text-xs uppercase tracking-wider text-[#6f776d]'>
-                Ingredients
-              </p>
-            </div>
-
-            <div className='flex flex-wrap gap-2'>
-              {QUICK_INGREDIENTS.map((item) => (
-                <button
-                  key={item}
-                  onClick={() => addIngredient(item)}
-                  className='flex items-center cursor-pointer gap-2 rounded-full bg-[#141816] border border-[#262e2a] px-3 py-1.5 text-sm hover:bg-[#1b221f] transition'
-                >
-                  <Plus size={12} />
-                  {item}
-                </button>
-              ))}
-            </div>
+              </motion.div>
+            ))}
           </div>
 
-          <div className='mt-12'>
-            <button
+          <motion.div variants={item} className='mt-12'>
+            <motion.button
+              animate={
+                selected.length > 0 ? { scale: [1, 1.03, 1] } : { scale: 1 }
+              }
+              transition={{
+                repeat: selected.length > 0 ? Infinity : 0,
+                duration: 1.5,
+              }}
               disabled={selected.length === 0}
-              className='w-full rounded-2xl bg-white text-black py-4 text-sm font-medium transition hover:opacity-90 active:scale-[0.98] disabled:opacity-30'
+              className='w-full rounded-2xl bg-white text-black py-4 text-sm font-medium shadow-lg shadow-white/10 disabled:opacity-30'
             >
               {selected.length > 0
                 ? `Find recipes (${selected.length})`
                 : 'Add ingredients to continue'}
-            </button>
-          </div>
-        </div>
+            </motion.button>
+          </motion.div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
