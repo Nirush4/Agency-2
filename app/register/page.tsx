@@ -110,7 +110,7 @@ export default function RegisterPage(): JSX.Element {
           <h1 className='text-h3 sm:text-h1 font-heading font-extrabold text-text'>
             Create Account
           </h1>
-          <p className='mt-2 text-body font-body'>
+          <p className='mt-2 text-text font-body'>
             Join and share your delicious recipes 🍽️
           </p>
         </div>
@@ -118,7 +118,7 @@ export default function RegisterPage(): JSX.Element {
         <div className='mb-4'>
           <label
             htmlFor='name'
-            className='block mb-2 text-body font-body font-medium'
+            className='block mb-2 text-text font-body font-medium'
           >
             Full name
           </label>
@@ -129,7 +129,7 @@ export default function RegisterPage(): JSX.Element {
             placeholder='John Doe'
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? 'name-error' : undefined}
-            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]'
+            className='w-full px-4 py-3 text-text font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-(--color-secondary)'
           />
           {errors.name && (
             <p id='name-error' className='mt-1 text-sm text-red-500'>
@@ -141,7 +141,7 @@ export default function RegisterPage(): JSX.Element {
         <div className='mb-4'>
           <label
             htmlFor='avatar'
-            className='block mb-2 text-body font-body font-medium'
+            className='block mb-2 text-text font-body font-medium'
           >
             Profile picture URL
           </label>
@@ -150,7 +150,7 @@ export default function RegisterPage(): JSX.Element {
             {...register('avatar_url')}
             autoComplete='url'
             placeholder='https://example.com/avatar.jpg'
-            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]'
+            className='w-full px-4 py-3 text-text font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-(--color-secondary)]'
           />
           {errors.avatar_url && (
             <p className='text-sm text-red-500'>{errors.avatar_url.message}</p>
@@ -160,7 +160,7 @@ export default function RegisterPage(): JSX.Element {
         <div className='mb-4'>
           <label
             htmlFor='email'
-            className='block mb-2 text-body font-body font-medium'
+            className='block mb-2 text-text font-body font-medium'
           >
             Email
           </label>
@@ -171,7 +171,7 @@ export default function RegisterPage(): JSX.Element {
             placeholder='johndoe@example.com'
             aria-invalid={!!errors.email}
             aria-describedby={errors.email ? 'email-error' : undefined}
-            className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]'
+            className='w-full px-4 py-3 text-text font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-(--color-secondary)]'
           />
           {errors.email && (
             <p id='email-error' className='text-sm text-red-500'>
@@ -183,7 +183,7 @@ export default function RegisterPage(): JSX.Element {
         <div className='mb-6 relative'>
           <label
             htmlFor='password'
-            className='block mb-2 text-body font-body font-medium'
+            className='block mb-2 text-text font-body font-medium'
           >
             Password
           </label>
@@ -196,7 +196,7 @@ export default function RegisterPage(): JSX.Element {
               aria-invalid={!!errors.password}
               aria-describedby={errors.password ? 'password-error' : undefined}
               placeholder='••••••••'
-              className='w-full px-4 py-3 text-body font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] pr-12'
+              className='w-full px-4 py-3 text-text font-body border rounded-xl focus:outline-none focus:ring-2 focus:ring-(--color-secondary)] pr-12'
             />
             <button
               type='button'
@@ -239,7 +239,7 @@ export default function RegisterPage(): JSX.Element {
           type='submit'
           disabled={isSubmitting}
           aria-busy={isSubmitting}
-          className='w-full py-3 sm:py-4 cursor-pointer text-white font-semibold rounded-xl shadow-lg transition transform hover:scale-105 focus:ring-2 focus:ring-[var(--color-secondary)]'
+          className='w-full py-3 sm:py-4 cursor-pointer text-white font-semibold rounded-xl shadow-lg transition transform hover:scale-105 focus:ring-2 focus:ring-(--color-secondary)]'
           style={{ backgroundColor: 'var(--color-secondary)' }}
         >
           {isSubmitting ? 'Creating account…' : 'Sign up'}
@@ -249,7 +249,7 @@ export default function RegisterPage(): JSX.Element {
           {isSubmitting ? 'Submitting form' : ''}
         </div>
 
-        <p className='mt-6 text-center text-body font-body'>
+        <p className='mt-6 text-center text-text font-body'>
           Already have an account?{' '}
           <Link
             href='/login'

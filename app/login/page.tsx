@@ -98,7 +98,7 @@ export default function LoginPage(): JSX.Element {
           <h1 className='text-h3 sm:text-h1 font-heading font-extrabold text-text'>
             Welcome Back
           </h1>
-          <p className='mt-2 text-sm sm:text-base'>
+          <p className='mt-2 text-text'>
             Sign in to access your delicious recipes
           </p>
         </div>
@@ -106,7 +106,7 @@ export default function LoginPage(): JSX.Element {
         <div className='mb-5'>
           <label
             htmlFor='email'
-            className='block mb-2 text-body font-body font-medium'
+            className='block mb-2 text-text font-body font-medium'
           >
             Email address
           </label>
@@ -118,14 +118,14 @@ export default function LoginPage(): JSX.Element {
             required
             placeholder='you@example.com'
             autoComplete='email'
-            className='w-full px-4 py-3 border rounded-xl text-body font-body focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] shadow-sm transition'
+            className='w-full px-4 py-3 border rounded-xl text-text font-body focus:outline-none focus:ring-2 focus:ring-(--color-secondary) shadow-sm transition'
           />
         </div>
 
         <div className='mb-6 relative'>
           <label
             htmlFor='password'
-            className='block mb-2 text-body font-body font-medium'
+            className='block mb-2 text-text font-body font-medium'
           >
             Password
           </label>
@@ -138,7 +138,7 @@ export default function LoginPage(): JSX.Element {
               required
               placeholder='••••••••'
               autoComplete='current-password'
-              className='w-full px-4 py-3 border rounded-xl text-body font-body focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] pr-12 shadow-sm transition'
+              className='w-full px-4 py-3 border rounded-xl text-text font-body focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] pr-12 shadow-sm transition'
             />
             <button
               type='button'
@@ -165,7 +165,7 @@ export default function LoginPage(): JSX.Element {
           {loading ? 'Logging in…' : 'Log in'}
         </button>
 
-        <p className='mt-6 text-center text-body font-body'>
+        <p className='mt-6 text-center text-text font-body'>
           Don’t have an account?{' '}
           <Link
             href='/register'
