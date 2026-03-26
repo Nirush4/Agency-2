@@ -10,6 +10,9 @@
     "test:e2e": "npx playwright test",
     "test:e2e:ui": "npx playwright test --ui",
     "test:e2e:report": "npx playwright show-report",
+    "drizzle:generate": "drizzle-kit generate --out ./drizzle",
+    "drizzle:migrate": "drizzle-kit migrate",
+    "drizzle:push": "drizzle-kit push",
     "lint": "eslint"
   },
   "dependencies": {
