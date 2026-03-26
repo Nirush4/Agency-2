@@ -1,6 +1,7 @@
 import CreatePageForm from "@/components/create-page/CreatePageForm";
 import { createClient } from "@/service/api/supabaseServer";
 import { Suspense } from "react";
+export const dynamic = "force-dynamic";
 
 export default async function CreatePage() {
   const supabase = createClient();
