@@ -8,6 +8,8 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default function LoginPage(): JSX.Element {
   const supabase = createClient();
   const router = useRouter();
