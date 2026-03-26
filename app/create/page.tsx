@@ -9,7 +9,7 @@ export default async function CreatePage() {
 
   return (
     <div className="flex h-screen items-center justify-center flex-col gap-4">
-      <h1 className="text-2xl font-bold">Create a Post</h1>
+      <h1 className="text-2xl font-bold">Create a Recipe Post</h1>
 
       <Suspense fallback={<div>Loading...</div>}>
         <CreatePageForm />
