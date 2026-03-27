@@ -1,9 +1,9 @@
 import HeroSection from '@/components/home/HeroSection';
-import HomeTopBar from '@/components/home/HomeTopBar';
 import SearchBar from '@/components/home/SearchBar';
 import GlobalRecipesSection from '@/components/home/GlobalRecipesSection';
 import TrendingRecipesSection from '@/components/home/TrendingRecipesSection';
 import TopChoicesSection from '@/components/home/TopChoicesSection';
+import AuthUserMenu from '@/components/auth/AuthUserMenu';
 import { createClient } from '@/service/api/supabaseServer';
 
 interface Recipe {
@@ -14,11 +14,17 @@ interface Recipe {
 export default async function HomePage() {
 	const supabase = await createClient();
 
+	const {
+		data: { user },
+	} = await supabase.auth.getUser();
+
 	const { data: recipes } = await supabase.from('recipes').select('*');
 
 	return (
 		<div className='p-4 md:p-6'>
-			<HomeTopBar />
+			<div className='mb-6 flex items-center justify-end gap-3'>
+				<AuthUserMenu user={user} />
+			</div>
 
 			<div className='mb-6'>
 				<HeroSection />
@@ -33,7 +39,6 @@ export default async function HomePage() {
 
 			<TopChoicesSection />
 
-			{/* TEMP DEBUG LIST */}
 			<section className='mt-8 rounded-xl bg-[#1b232b] p-4'>
 				<h2 className='mb-4 text-sm italic text-[#f5f1e8]'>Recipes from Supabase</h2>
 
