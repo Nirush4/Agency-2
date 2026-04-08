@@ -1,11 +1,16 @@
 import CreatePageForm from "@/components/create-page/CreatePageForm";
 import { createClient } from "@/service/api/supabaseServer";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 export const dynamic = "force-dynamic";
 
 export default async function CreatePage() {
-  const supabase = createClient();
-  console.log(supabase);
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/login");
 
   return (
     <div className="flex h-screen items-center justify-center flex-col gap-4">
