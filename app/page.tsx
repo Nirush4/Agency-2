@@ -1,52 +1,56 @@
-import HeroSection from '@/components/home/HeroSection';
-import HomeTopBar from '@/components/home/HomeTopBar';
-import SearchBar from '@/components/home/SearchBar';
-import GlobalRecipesSection from '@/components/home/GlobalRecipesSection';
-import TrendingRecipesSection from '@/components/home/TrendingRecipesSection';
-import TopChoicesSection from '@/components/home/TopChoicesSection';
-import { createClient } from '@/service/api/supabaseServer';
+import HeroSection from "@/components/home/HeroSection";
+import HomeTopBar from "@/components/home/HomeTopBar";
+import SearchBar from "@/components/home/SearchBar";
+import GlobalRecipesSection from "@/components/home/GlobalRecipesSection";
+import TrendingRecipesSection from "@/components/home/TrendingRecipesSection";
+import TopChoicesSection from "@/components/home/TopChoicesSection";
+import { createClient } from "@/service/api/supabaseServer";
 
-interface Recipe {
-	id: number;
-	title: string;
+export interface Recipe {
+  id: string;
+  title: string;
+  description: string | null;
+  cook_time: number | null;
+  difficulty: string | null;
+  calories: number | null;
+  servings: number | null;
+  meal_type: string | null;
+  image_url: string | null;
+  created_at: string | null;
+  views_count: number | null;
 }
 
 export default async function HomePage() {
-	const supabase = await createClient();
+  const supabase = await createClient();
 
-	const { data: recipes } = await supabase.from('recipes').select('*');
+  const { data: recipes } = await supabase
+    .from("recipes")
+    .select(
+      "id, title, description, cook_time, difficulty, calories, servings, meal_type, image_url, created_at, views_count",
+    )
+    .order("created_at", { ascending: false });
 
-	return (
-		<div className='p-4 md:p-6'>
-			<HomeTopBar />
+  const allRecipes: Recipe[] = recipes ?? [];
+  const trending = [...allRecipes]
+    .sort((a, b) => (b.views_count ?? 0) - (a.views_count ?? 0))
+    .slice(0, 4);
 
-			<div className='mb-6'>
-				<HeroSection />
-			</div>
+  return (
+    <div className="p-4 md:p-6">
+      <HomeTopBar />
 
-			<SearchBar />
+      <div className="mb-6">
+        <HeroSection />
+      </div>
 
-			<div className='grid gap-6 md:grid-cols-[2fr_1fr]'>
-				<GlobalRecipesSection />
-				<TrendingRecipesSection />
-			</div>
+      <SearchBar />
 
-			<TopChoicesSection />
+      <div className="grid gap-6 md:grid-cols-[2fr_1fr]">
+        <GlobalRecipesSection recipes={allRecipes} />
+        <TrendingRecipesSection recipes={trending} />
+      </div>
 
-			{/* TEMP DEBUG LIST */}
-			<section className='mt-8 rounded-xl bg-[#1b232b] p-4'>
-				<h2 className='mb-4 text-sm italic text-[#f5f1e8]'>Recipes from Supabase</h2>
-
-				<ul className='space-y-2'>
-					{recipes?.map((recipe: Recipe) => (
-						<li
-							key={recipe.id}
-							className='text-sm text-[#f5f1e8]'>
-							{recipe.title}
-						</li>
-					))}
-				</ul>
-			</section>
-		</div>
-	);
+      <TopChoicesSection recipes={allRecipes} />
+    </div>
+  );
 }
