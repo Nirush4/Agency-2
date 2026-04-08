@@ -1,4 +1,4 @@
-import { createClient } from "@/service/api/subabaseClient";
+import { createClient } from "@/service/api/supabaseClient";
 
 interface Post {
   title: string;
@@ -24,7 +24,7 @@ export async function createPost(post: Post) {
     throw new Error("Not authenticated");
   }
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("recipes")
     .insert([
       {

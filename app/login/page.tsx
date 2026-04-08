@@ -3,7 +3,7 @@
 import { JSX, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { createClient } from "../../service/api/subabaseClient";
+import { createClient } from "../../service/api/supabaseClient";
 import Image from "next/image";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
