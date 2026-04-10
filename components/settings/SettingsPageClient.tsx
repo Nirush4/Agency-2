@@ -22,6 +22,10 @@ export default function SettingsPageClient() {
         </p>
 
         <div className="mt-4 flex flex-col gap-2">
+          <Link href="/create" className="text-blue-500 hover:underline">
+            Create Post
+          </Link>
+
           <Link
             href="/account-settings"
             className="text-blue-500 hover:underline"
