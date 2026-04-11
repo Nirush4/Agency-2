@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { CircleUserRound } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/service/api/supabaseClient";
+import { Button } from "../ui/button";
 
 interface UserProfile {
   username: string;
@@ -25,6 +27,16 @@ function getProfileFromStorage(): UserProfile | null {
 
 export default function HomeTopBar() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    localStorage.removeItem("username");
+    localStorage.removeItem("avatar_url");
+    setProfile(null);
+    router.push("/register");
+  };
 
   useEffect(() => {
     const supabase = createClient();
@@ -36,14 +48,12 @@ export default function HomeTopBar() {
           return;
         }
 
-        // Use localStorage cache if available (populated by login page)
         const cached = getProfileFromStorage();
         if (cached) {
           setProfile(cached);
           return;
         }
 
-        // Fallback: fetch from Supabase (username from users, avatar from profiles)
         const [{ data: userData }, { data: profileData }] = await Promise.all([
           supabase
             .from("users")
@@ -99,6 +109,15 @@ export default function HomeTopBar() {
           <span className="text-sm font-bold text-[#ffffff]">
             {profile.username}
           </span>
+
+          <Link href="/register" className="text-blue-500 hover:underline">
+            <Button
+              className="bg-red-600 cursor-pointer"
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+          </Link>
         </>
       ) : (
         <>
