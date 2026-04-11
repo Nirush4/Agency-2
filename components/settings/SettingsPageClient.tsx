@@ -1,18 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import HomeTopBar from "../home/HomeTopBar";
 
 export default function SettingsPageClient() {
   return (
     <div className="flex flex-col p-5 gap-2.5">
       <div className="flex">
-        <span className="inline-block rounded-full bg-blue-500 px-3 py-1 text-sm font-semibold text-white">
-          Avatar
-        </span>
-        <div className="ml-4">
-          <h1 className="text-2xl font-bold ">UserName</h1>
-          <p className="text-2xl font-bold">bob@gmail.com</p>
-        </div>
+        <HomeTopBar />
       </div>
 
       <section className="rounded-xl bg-[#dce3bf] p-4">
@@ -23,7 +18,7 @@ export default function SettingsPageClient() {
 
         <div className="mt-4 flex flex-col gap-2">
           <Link href="/create" className="text-blue-500 hover:underline">
-            Create Post
+            Create New Post
           </Link>
 
           <Link
