@@ -1,17 +1,13 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: [
-    "./app/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-  ],
+  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {
     extend: {
-
       fontFamily: {
-        heading: ['var(--font-heading)'],
-        body: ['var(--font-body)'],
-        subheading: ['var(--font-subheading)'],
+        heading: ["var(--font-heading)"],
+        body: ["var(--font-body)"],
+        subheading: ["var(--font-subheading)"],
       },
 
       fontSize: {
@@ -40,10 +36,9 @@ const config: Config = {
         error: "var(--color-error)",
         info: "var(--color-info)",
       },
-
     },
   },
   plugins: [],
-}
+};
 
-export default config
+export default config;
